@@ -20,8 +20,8 @@ OPTIMIZER_WD_ONLY_ON_WEIGHTS = True
 START_WITH_EVAL = False
 BATCH_SIZE = 1              # safer for Colab T4
 GRAD_ACUMM_STEPS = 252      # keep effective batch size ≈252
-SAVE_STEP = 5000            # frequent saves
-SAVE_N_CHECKPOINTS = 3      # keep last 3 checkpoints
+SAVE_STEP = 7020            # frequent saves
+SAVE_N_CHECKPOINTS = 1      # keep last 3 checkpoints
 
 # Dataset
 config_dataset = BaseDatasetConfig(
@@ -107,7 +107,7 @@ def main():
         eval_split_max_size=256,
         print_step=50,
         plot_step=100,
-        log_model_step=1000,
+        log_model_step=3510,
         save_step=SAVE_STEP,
         save_n_checkpoints=SAVE_N_CHECKPOINTS,
         save_checkpoints=True,
@@ -116,8 +116,11 @@ def main():
         optimizer_params={"betas": [0.9, 0.96], "eps": 1e-8, "weight_decay": 1e-2},
         lr=5e-06,
         lr_scheduler="MultiStepLR",
-        lr_scheduler_params={"milestones": [50000 * 18, 150000 * 18, 300000 * 18],
-                             "gamma": 0.5, "last_epoch": -1},
+        # lr_scheduler_params={"milestones": [50000 * 14, 150000 * 18, 300000 * 18],
+        #                      "gamma": 0.5, "last_epoch": -1},
+        lr_scheduler_params={"milestones": [700, 1050, 1260],
+                     "gamma": 0.5, "last_epoch": -1},
+                     
         test_sentences=[
             {"text": "haye aboow xaalada kawarn",
              "speaker_wav": SPEAKER_REFERENCE,
@@ -140,6 +143,7 @@ def main():
     )
 
     # Trainer
+    
     trainer = Trainer(
         TrainerArgs(
             restore_path=None,
