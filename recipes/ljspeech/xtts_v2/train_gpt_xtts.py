@@ -25,10 +25,11 @@ SAVE_N_CHECKPOINTS = 1      # keep last 3 checkpoints
 
 # Dataset
 config_dataset = BaseDatasetConfig(
-    formatter="ljspeech",
-    dataset_name="LJSpeech",
-    path="/content/LJSpeech",
-    meta_file_train="/content/LJSpeech/metadata.csv",
+    formatter="old_vctk",
+    dataset_name="VCTK_like_dataset",
+    path="/content/VCTK_like_dataset",
+    meta_file_train="/content/VCTK_like_dataset/metadata_train.csv",
+    meta_file_eval="/content/VCTK_like_dataset/metadata_eval.csv",
     language='en',
     phonemizer="so-so",
 )
@@ -63,7 +64,7 @@ if not os.path.isfile(TOKENIZER_FILE) or not os.path.isfile(XTTS_CHECKPOINT):
 
 # Speaker reference for test sentences
 SPEAKER_REFERENCE = [
-    "/content/drive/MyDrive/LJSpeech/wavs/000006.wav"
+    "/content/drive/MyDrive/VCTK_like_dataset/wavs/000006.wav"
 ]
 LANGUAGE = config_dataset.language
 
@@ -73,7 +74,7 @@ def main():
         min_conditioning_length=66150,   # 3s min
         debug_loading_failures=False,
         max_wav_length=460000,           # ~20.8s (your longest clip)
-        max_text_length=200,
+        max_text_length=267,
         mel_norm_file=MEL_NORM_FILE,
         dvae_checkpoint=DVAE_CHECKPOINT,
         xtts_checkpoint=XTTS_CHECKPOINT,
@@ -114,15 +115,14 @@ def main():
         optimizer="AdamW",
         optimizer_wd_only_on_weights=OPTIMIZER_WD_ONLY_ON_WEIGHTS,
         optimizer_params={"betas": [0.9, 0.96], "eps": 1e-8, "weight_decay": 1e-2},
-        lr=5e-06,
-        lr_scheduler="MultiStepLR",
-        # lr_scheduler_params={"milestones": [50000 * 14, 150000 * 18, 300000 * 18],
-        #                      "gamma": 0.5, "last_epoch": -1},
-        lr_scheduler_params={"milestones": [700, 1050, 1260],
-                     "gamma": 0.5, "last_epoch": -1},
-                     
+        lr=2e-5,
+        lr_scheduler="CosineAnnealingLR",
+        lr_scheduler_params={
+            "T_max": 21256,  # ≈ number of training samples (one epoch worth of steps)
+            "eta_min": 1e-6  # minimum LR
+        },
         test_sentences=[
-            {"text": "haye aboow xaalada kawarn",
+            {"text": "haye aboow xaalada kawarn ku dhashtay khaabuur",
              "speaker_wav": SPEAKER_REFERENCE,
              "language": LANGUAGE},
             {"text": "magacyga waa maxamed cabdi nuur adan ibrahim mursal",
