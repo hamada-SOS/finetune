@@ -25,11 +25,11 @@ SAVE_N_CHECKPOINTS = 1      # keep last 3 checkpoints
 
 # Dataset
 config_dataset = BaseDatasetConfig(
-    formatter="old_vctk",
+    formatter="vctk_old",
     dataset_name="VCTK_like_dataset",
     path="/content/VCTK_like_dataset",
     meta_file_train="/content/VCTK_like_dataset/metadata_train.csv",
-    meta_file_eval="/content/VCTK_like_dataset/metadata_eval.csv",
+    # meta_file_eval="/content/VCTK_like_dataset/metadata_eval.csv",
     language='en',
     phonemizer="so-so",
 )
@@ -64,7 +64,7 @@ if not os.path.isfile(TOKENIZER_FILE) or not os.path.isfile(XTTS_CHECKPOINT):
 
 # Speaker reference for test sentences
 SPEAKER_REFERENCE = [
-    "/content/drive/MyDrive/VCTK_like_dataset/wavs/000006.wav"
+    "/content/VCTK_like_dataset/wav48/SPEAKER_00al/000005.wav"
 ]
 LANGUAGE = config_dataset.language
 
@@ -108,17 +108,17 @@ def main():
         eval_split_max_size=256,
         print_step=50,
         plot_step=100,
-        log_model_step=3510,
+        log_model_step=21256,
         save_step=SAVE_STEP,
         save_n_checkpoints=SAVE_N_CHECKPOINTS,
         save_checkpoints=True,
         optimizer="AdamW",
         optimizer_wd_only_on_weights=OPTIMIZER_WD_ONLY_ON_WEIGHTS,
-        optimizer_params={"betas": [0.9, 0.96], "eps": 1e-8, "weight_decay": 1e-2},
+        optimizer_params={"betas": [0.9, 0.999], "eps": 1e-8, "weight_decay": 1e-4},
         lr=2e-5,
         lr_scheduler="CosineAnnealingLR",
         lr_scheduler_params={
-            "T_max": 21256,  # ≈ number of training samples (one epoch worth of steps)
+            "T_max": 504,  # T_max = (num_samples / (batch_size / grad_accum_steps)) * num_epochs
             "eta_min": 1e-6  # minimum LR
         },
         test_sentences=[
@@ -161,3 +161,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

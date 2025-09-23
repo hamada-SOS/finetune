@@ -480,19 +480,38 @@ def vctk_old(root_path, meta_files=None, wavs_path="wav48", ignored_speakers=Non
     """homepages.inf.ed.ac.uk/jyamagis/release/VCTK-Corpus.tar.gz"""
     items = []
     meta_files = glob(f"{os.path.join(root_path, 'txt')}/**/*.txt", recursive=True)
+
     for meta_file in meta_files:
         _, speaker_id, txt_file = os.path.relpath(meta_file, root_path).split(os.sep)
         file_id = txt_file.split(".")[0]
+
         # ignore speakers
-        if isinstance(ignored_speakers, list):
-            if speaker_id in ignored_speakers:
-                continue
+        if isinstance(ignored_speakers, list) and speaker_id in ignored_speakers:
+            continue
+
         with open(meta_file, encoding="utf-8") as file_text:
-            text = file_text.readlines()[0]
+            lines = [l.strip() for l in file_text.readlines() if l.strip()]
+
+        if not lines:  # ⬅️ skip empty transcription files
+            print(f"⚠️ Skipping empty transcription file: {meta_file}")
+            continue
+
+        text = lines[0]
         wav_file = os.path.join(root_path, wavs_path, speaker_id, file_id + ".wav")
+
+        if not os.path.exists(wav_file):
+            print(f"⚠️ Missing wav file for {meta_file}, expected {wav_file}")
+            continue
+
         items.append(
-            {"text": text, "audio_file": wav_file, "speaker_name": "VCTK_old_" + speaker_id, "root_path": root_path}
+            {
+                "text": text,
+                "audio_file": wav_file,
+                "speaker_name": "VCTK_old_" + speaker_id,
+                "root_path": root_path,
+            }
         )
+
     return items
 
 
@@ -719,3 +738,4 @@ register_formatter("baker", baker)
 register_formatter("kokoro", kokoro)
 register_formatter("kss", kss)
 register_formatter("bel_tts_formatter", bel_tts_formatter)
+
