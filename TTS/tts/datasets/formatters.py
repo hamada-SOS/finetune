@@ -477,32 +477,35 @@ def vctk(root_path, meta_files=None, wavs_path="wav48_silence_trimmed", mic="mic
 
 
 def vctk_old(root_path, meta_files=None, wavs_path="wav48", ignored_speakers=None):
-    """homepages.inf.ed.ac.uk/jyamagis/release/VCTK-Corpus.tar.gz"""
     items = []
-    meta_files = glob(f"{os.path.join(root_path, 'txt')}/**/*.txt", recursive=True)
+    ignored_speakers = ignored_speakers or []
+
+    # Collect all .txt once
+    if meta_files is None:
+        meta_files = list(Path(root_path, "txt").rglob("*.txt"))
 
     for meta_file in meta_files:
-        _, speaker_id, txt_file = os.path.relpath(meta_file, root_path).split(os.sep)
+        rel_parts = Path(meta_file).relative_to(root_path).parts
+        if len(rel_parts) < 3:
+            continue
+        _, speaker_id, txt_file = rel_parts
         file_id = txt_file.split(".")[0]
 
         # ignore speakers
-        if isinstance(ignored_speakers, list) and speaker_id in ignored_speakers:
+        if speaker_id in ignored_speakers:
             continue
 
-        with open(meta_file, encoding="utf-8") as file_text:
-            lines = [l.strip() for l in file_text.readlines() if l.strip()]
-
-        if not lines:  # ⬅️ skip empty transcription files
-            print(f"⚠️ Skipping empty transcription file: {meta_file}")
+        # read first non-empty line only
+        text = ""
+        with open(meta_file, encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    text = line.strip()
+                    break
+        if not text:
             continue
 
-        text = lines[0]
         wav_file = os.path.join(root_path, wavs_path, speaker_id, file_id + ".wav")
-
-        if not os.path.exists(wav_file):
-            print(f"⚠️ Missing wav file for {meta_file}, expected {wav_file}")
-            continue
-
         items.append(
             {
                 "text": text,
@@ -511,9 +514,7 @@ def vctk_old(root_path, meta_files=None, wavs_path="wav48", ignored_speakers=Non
                 "root_path": root_path,
             }
         )
-
     return items
-
 
 def synpaflex(root_path, metafiles=None, **kwargs):  # pylint: disable=unused-argument
     items = []
