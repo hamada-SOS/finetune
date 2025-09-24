@@ -20,15 +20,15 @@ OPTIMIZER_WD_ONLY_ON_WEIGHTS = True
 START_WITH_EVAL = False
 BATCH_SIZE = 1              # safer for Colab T4
 GRAD_ACUMM_STEPS = 252      # keep effective batch size ≈252
-SAVE_STEP = 7020            # frequent saves
+SAVE_STEP = 23616            # frequent saves
 SAVE_N_CHECKPOINTS = 1      # keep last 3 checkpoints
 
 # Dataset
 config_dataset = BaseDatasetConfig(
-    formatter="vctk_old",
-    dataset_name="VCTK_like_dataset",
-    path="/content/VCTK_like_dataset",
-    meta_file_train="/content/VCTK_like_dataset/metadata_train.csv",
+    formatter="coqui",
+    dataset_name="coqui",
+    path="/content/coqui",
+    meta_file_train="/content/coqui/metadata.csv",
     # meta_file_eval="/content/VCTK_like_dataset/metadata_eval.csv",
     language='en',
     phonemizer="so-so",
@@ -64,10 +64,9 @@ if not os.path.isfile(TOKENIZER_FILE) or not os.path.isfile(XTTS_CHECKPOINT):
 
 # Speaker reference for test sentences
 SPEAKER_REFERENCE = [
-    "/content/VCTK_like_dataset/wav48/SPEAKER_00al/000005.wav"
+    "/content/coqui/wavs/000005.wav"
 ]
 LANGUAGE = config_dataset.language
-
 def main():
     model_args = GPTArgs(
         max_conditioning_length=132300,  # 6s reference
@@ -108,7 +107,7 @@ def main():
         eval_split_max_size=256,
         print_step=50,
         plot_step=100,
-        log_model_step=21256,
+        log_model_step=23616,
         save_step=SAVE_STEP,
         save_n_checkpoints=SAVE_N_CHECKPOINTS,
         save_checkpoints=True,
@@ -118,7 +117,7 @@ def main():
         lr=2e-5,
         lr_scheduler="CosineAnnealingLR",
         lr_scheduler_params={
-            "T_max": 504,  # T_max = (num_samples / (batch_size / grad_accum_steps)) * num_epochs
+            "T_max": 564,  # T_max = (num_samples / (batch_size / grad_accum_steps)) * num_epochs
             "eta_min": 1e-6  # minimum LR
         },
         test_sentences=[
@@ -161,4 +160,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
