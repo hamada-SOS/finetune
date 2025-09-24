@@ -64,7 +64,7 @@ if not os.path.isfile(TOKENIZER_FILE) or not os.path.isfile(XTTS_CHECKPOINT):
 
 # Speaker reference for test sentences
 SPEAKER_REFERENCE = [
-    "/content/coqui/wavs/000005.wav"
+    "/content/coqui/wavs/sample_002654.wav"
 ]
 LANGUAGE = config_dataset.language
 def main():
