@@ -142,11 +142,12 @@ def main():
     )
 
     # Trainer
-    
+    restore = '/content/drive/MyDrive/XTTS_FT_runs/GPT_XTTS_v2.0_LJSpeech_FT-September-25-2025_12+18PM-4bd478a'
     trainer = Trainer(
         TrainerArgs(
             restore_path=None,
             skip_train_epoch=False,
+            continue_path=restore,
             start_with_eval=START_WITH_EVAL,
             grad_accum_steps=GRAD_ACUMM_STEPS,
         ),
