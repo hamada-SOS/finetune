@@ -117,8 +117,8 @@ def main():
         lr=2e-5,
         lr_scheduler="CosineAnnealingLR",
         lr_scheduler_params={
-            "T_max": 564,  # T_max = (num_samples / (batch_size / grad_accum_steps)) * num_epochs
-            "eta_min": 1e-6  # minimum LR
+            "T_max": 12, 
+            "eta_min": 1e-6
         },
         test_sentences=[
             {"text": "haye aboow xaalada kawarn ku dhashtay khaabuur",
