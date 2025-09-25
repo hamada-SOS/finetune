@@ -114,7 +114,7 @@ def main():
         optimizer="AdamW",
         optimizer_wd_only_on_weights=OPTIMIZER_WD_ONLY_ON_WEIGHTS,
         optimizer_params={"betas": [0.9, 0.999], "eps": 1e-8, "weight_decay": 1e-4},
-        lr=2e-5,
+        lr=5e-6,
         lr_scheduler="CosineAnnealingLR",
         lr_scheduler_params={
             "T_max": 12, 
