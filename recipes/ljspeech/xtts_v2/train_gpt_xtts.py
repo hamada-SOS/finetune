@@ -114,12 +114,12 @@ def main():
         optimizer="AdamW",
         optimizer_wd_only_on_weights=OPTIMIZER_WD_ONLY_ON_WEIGHTS,
         optimizer_params={"betas": [0.9, 0.999], "eps": 1e-8, "weight_decay": 1e-4},
-        lr=5e-6,
-        lr_scheduler="CosineAnnealingLR",
-        lr_scheduler_params={
-            "T_max": 12, 
-            "eta_min": 1e-6
-        },
+        lr=3e-5,
+        # lr_scheduler="CosineAnnealingLR",
+        # lr_scheduler_params={
+        #     "T_max": 12, 
+        #     "eta_min": 1e-6
+        # },
         test_sentences=[
             {"text": "haye aboow xaalada kawarn ku dhashtay khaabuur",
              "speaker_wav": SPEAKER_REFERENCE,
@@ -142,7 +142,9 @@ def main():
     )
 
     # Trainer
-    restore = '/content/drive/MyDrive/XTTS_FT_runs/GPT_XTTS_v2.0_LJSpeech_FT-September-25-2025_12+18PM-4bd478a'
+    restore = '/content/drive/MyDrive/XTTS_FT_runs/GPT_XTTS_v2.0_LJSpeech_FT-September-27-2025_09+54AM-fbcd827'
+    # restore_lr = '/content/drive/MyDrive/XTTS_FT_runs/GPT_XTTS_v2.0_LJSpeech_FT-September-25-2025_12+18PM-4bd478a/checkpoint_236160.pth'
+    
     trainer = Trainer(
         TrainerArgs(
             restore_path=None,
