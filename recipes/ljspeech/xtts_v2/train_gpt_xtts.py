@@ -144,7 +144,7 @@ def main():
     )
 
     # Trainer
-    restore = '/content/drive/MyDrive/XTTS_FT_runs/GPT_XTTS_v2.0_LJSpeech_FT-October-02-2025_09+26AM-4f5d22b/best_model.pth'
+    restore = '/content/drive/MyDrive/XTTS_FT_runs/GPT_XTTS_v2.0_LJSpeech_FT-October-02-2025_09+26AM-4f5d22b'
     
     trainer = Trainer(
         TrainerArgs(
