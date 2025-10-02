@@ -64,7 +64,7 @@ if not os.path.isfile(TOKENIZER_FILE) or not os.path.isfile(XTTS_CHECKPOINT):
 
 # Speaker reference for test sentences
 SPEAKER_REFERENCE = [
-    "/content/coqui/wavs/sample_002645.wav"
+    "/content/coqui/wavs/sample_000001.wav"
 ]
 LANGUAGE = config_dataset.language
 def main():
@@ -72,7 +72,7 @@ def main():
         max_conditioning_length=132300,  # 6s reference
         min_conditioning_length=66150,   # 3s min
         debug_loading_failures=False,
-        max_wav_length=460000,           # ~20.8s (your longest clip)
+        max_wav_length = 330750   # ~15s
         max_text_length=267,
         mel_norm_file=MEL_NORM_FILE,
         dvae_checkpoint=DVAE_CHECKPOINT,
@@ -144,14 +144,14 @@ def main():
     )
 
     # Trainer
-    restore = '/content/drive/MyDrive/XTTS_FT_runs/GPT_XTTS_v2.0_LJSpeech_FT-September-27-2025_09+54AM-fbcd827'
+    restore = '/content/drive/MyDrive/XTTS_FT_runs/checkpoint_212544.pth'
     # restore_lr = '/content/drive/MyDrive/XTTS_FT_runs/GPT_XTTS_v2.0_LJSpeech_FT-September-25-2025_12+18PM-4bd478a/checkpoint_236160.pth'
     
     trainer = Trainer(
         TrainerArgs(
-            restore_path=None,
+            restore_path=restore,
             skip_train_epoch=False,
-            continue_path=restore,
+            # continue_path=restore,
             start_with_eval=START_WITH_EVAL,
             grad_accum_steps=GRAD_ACUMM_STEPS,
         ),
