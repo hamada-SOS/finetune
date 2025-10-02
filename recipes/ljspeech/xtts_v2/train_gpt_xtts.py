@@ -72,7 +72,7 @@ def main():
         max_conditioning_length=132300,  # 6s reference
         min_conditioning_length=66150,   # 3s min
         debug_loading_failures=False,
-        max_wav_length = 330750   # ~15s
+        max_wav_length = 330750,   # ~15s
         max_text_length=267,
         mel_norm_file=MEL_NORM_FILE,
         dvae_checkpoint=DVAE_CHECKPOINT,
@@ -116,12 +116,12 @@ def main():
         optimizer_params={"betas": [0.9, 0.999], "eps": 1e-8, "weight_decay": 1e-4},
 
 # 🔹 Learning rate schedule for 100 epochs
-        lr = 1e-4   # start high enough to adapt
-        lr_scheduler = "CosineAnnealingLR"
+        lr = 1e-4,   # start high enough to adapt
+        lr_scheduler = "CosineAnnealingLR",
         lr_scheduler_params = {
             "T_max": 100,     # match total epochs
             "eta_min": 5e-6   # minimum LR at the end
-        }
+        },
         test_sentences=[
             {"text": "haye aboow xaalada kawarn ku dhashtay khaabuur",
              "speaker_wav": SPEAKER_REFERENCE,
@@ -144,14 +144,13 @@ def main():
     )
 
     # Trainer
-    restore = '/content/drive/MyDrive/XTTS_FT_runs/checkpoint_212544.pth'
-    # restore_lr = '/content/drive/MyDrive/XTTS_FT_runs/GPT_XTTS_v2.0_LJSpeech_FT-September-25-2025_12+18PM-4bd478a/checkpoint_236160.pth'
+    restore = '/content/drive/MyDrive/XTTS_FT_runs/GPT_XTTS_v2.0_LJSpeech_FT-October-02-2025_09+26AM-4f5d22b/best_model.pth'
     
     trainer = Trainer(
         TrainerArgs(
-            restore_path=restore,
+            restore_path=None,
             skip_train_epoch=False,
-            # continue_path=restore,
+            continue_path=restore,
             start_with_eval=START_WITH_EVAL,
             grad_accum_steps=GRAD_ACUMM_STEPS,
         ),
