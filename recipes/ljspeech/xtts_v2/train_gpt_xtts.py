@@ -114,12 +114,14 @@ def main():
         optimizer="AdamW",
         optimizer_wd_only_on_weights=OPTIMIZER_WD_ONLY_ON_WEIGHTS,
         optimizer_params={"betas": [0.9, 0.999], "eps": 1e-8, "weight_decay": 1e-4},
-        lr=3e-5,
-        # lr_scheduler="CosineAnnealingLR",
-        # lr_scheduler_params={
-        #     "T_max": 12, 
-        #     "eta_min": 1e-6
-        # },
+
+# 🔹 Learning rate schedule for 100 epochs
+        lr = 1e-4   # start high enough to adapt
+        lr_scheduler = "CosineAnnealingLR"
+        lr_scheduler_params = {
+            "T_max": 100,     # match total epochs
+            "eta_min": 5e-6   # minimum LR at the end
+        }
         test_sentences=[
             {"text": "haye aboow xaalada kawarn ku dhashtay khaabuur",
              "speaker_wav": SPEAKER_REFERENCE,
